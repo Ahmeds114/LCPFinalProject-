@@ -34,7 +34,7 @@ def create_connection():
     return mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="Bismillah@786",  # Replace with your actual DB password
+        password="<your password>"
         database="landscaping_platform"
     )
 

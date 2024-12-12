@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages - Landscaping Co</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #333;
+            padding: 20px;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .sidebar-header .logo {
+            width: 100%;
+            margin-bottom: 40px;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar-nav li {
+            margin: 20px 0;
+        }
+
+        .sidebar-nav a {
+            text-decoration: none;
+            color: white;
+            font-size: 18px;
+            display: block;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background-color: #0056b3;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 40px;
+            background-color: #fff;
+            width: calc(100% - 260px);
+        }
+
+        h1 {
+            color: #0056b3;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .chat-container {
+            display: flex;
+            gap: 20px;
+            height: calc(100vh - 150px);
+        }
+
+        .chat-list {
+            width: 30%;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .chat-item {
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .chat-item:hover,
+        .chat-item.active {
+            background-color: #e9ecef;
+        }
+
+        .profile-circle {
+            width: 40px;
+            height: 40px;
+            background-color: #0056b3;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+        }
+
+        .chat-window {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 80px;
+        }
+
+        .chat-header {
+            background-color: #0056b3;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .message-container {
+            flex-grow: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Customer Message Styles */
+        .message.customer {
+            align-self: flex-end;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 15px;
+            max-width: 60%;
+        }
+
+        /* Landscaper Message Styles */
+        .message.landscaper {
+            align-self: flex-start;
+            background-color: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 15px;
+            max-width: 60%;
+        }
+
+        .message-form {
+            display: flex;
+            gap: 10px;
+            padding: 10px 0;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+        }
+
+        .message-form input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .message-form button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .message-form button:hover {
+            background-color: #218838;
+        }
+
+        footer {
+            background-color: #343a40;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Landscaping Logo" class="logo">
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">Home</a>
+            </li>
+            <li><a href="{{ url_for('dashboard') }}"
+                    class="{% if request.endpoint == 'dashboard' %}active{% endif %}">Dashboard</a></li>
+            <li><a href="{{ url_for('messages') }}" class="active">Messages</a></li>
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <h1>Messages</h1>
+        <div class="chat-container">
+            <div class="chat-list">
+                {% for contact in contacts %}
+                <a href="{{ url_for('messages', contact_id=contact.id) }}">
+                    <div class="chat-item {% if contact.id == active_contact_id %}active{% endif %}">
+                        <div class="profile-circle">
+                            {{ contact.name[0].upper() }}
+                        </div>
+                        <span>{{ contact.name }}</span>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+
+            <div class="chat-window">
+                {% if active_contact %}
+                <div class="chat-header">Chat with {{ active_contact.name }}</div>
+                <div class="message-container">
+                    {% for message in messages %}
+                    <div
+                        class="message {% if message.user_type == 'customer' %}customer{% else %}landscaper{% endif %}">
+                        {{ message.text }}
+                        <!-- If a file is attached, display it -->
+                        {% if message.filepath %}
+                        <br>
+                        <!-- For image files, display a preview -->
+                        {% if message.filepath.endswith('.png') or message.filepath.endswith('.jpg') or
+                        message.filepath.endswith('.jpeg') or message.filepath.endswith('.gif') %}
+                        <img src="{{ url_for('static', filename=message.filepath) }}" alt="Image"
+                            style="max-width: 200px; max-height: 200px; margin-top: 10px;">
+
+                        {% else %}
+                        <!-- For non-image files, provide a download link -->
+                        <a href="{{ url_for('static', filename=message.filepath) }}" download style="color: #ddd;"
+                            <b><i>
+                                Download {{ message.filepath.split('/')[-1] }}</b></i>
+                        </a>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                <form class="message-form" action="{{ url_for('send_message') }}" method="POST"
+                    enctype="multipart/form-data">
+                    <input type="hidden" name="receiver_id" value="{{ active_contact.id }}">
+                    <input type="hidden" name="user_type" value="{{ session['user_type'] }}">
+                    <input type="text" name="message" placeholder="Write a message...">
+                    <input type="file" name="file">
+                    <button type="submit">Send</button>
+                </form>
+                {% else %}
+                <div class="chat-header">Select a contact to start chatting</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Landscaping Connection Platform. All rights reserved.</p>
+    </footer>
+</body>
+
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects - Landscaping Co</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+
+<body>
+    <!-- Sidebar navigation -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Landscaping Logo" class="logo"
+                style="width: 100%;">
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">Home</a>
+            </li>
+            <li><a href="{{ url_for('dashboard') }}"
+                    class="{% if request.endpoint == 'dashboard' %}active{% endif %}">Dashboard</a></li>
+            <li><a href="{{ url_for('search_projects') }}" class="active">Search Projects</a></li>
+            <li><a href="{{ url_for('invoices') }}">Invoices</a></li>
+            <li><a href="{{ url_for('messages') }}">Messages</a></li>
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main content -->
+    <div class="main-content">
+        <h1>Projects</h1>
+
+        <!-- Display projects if available -->
+        {% if projects %}
+        <h2>Projects Available in Zip Code: {{ zipcode }}</h2>
+        <ul class="project-list">
+            {% for project in projects %}
+            <li class="project-item">
+                <h3>Project ID: {{ project.id }}</h3>
+                <p><strong>Details:</strong> {{ project.details }}</p>
+                <p><strong>Price:</strong> ${{ project.price }}</p>
+                <p><strong>Additional Information:</strong> {{ project.additional_details }}</p>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <div class="no-projects">
+            <h3>No projects found for the entered zip code.</h3>
+        </div>
+        {% endif %}
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Landscaping Connection Platform. All rights reserved.</p>
+    </footer>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #333;
+            padding: 20px;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .sidebar-nav {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 20px;
+        }
+
+        .sidebar-nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 10px;
+            display: block;
+            border-radius: 5px;
+        }
+
+        .sidebar-nav a.active {
+            background-color: #4CAF50;
+        }
+
+        .main-content {
+            margin-left: 270px;
+            padding: 40px;
+            width: calc(100% - 270px);
+            background-color: #fff;
+        }
+
+        .no-projects {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f1f3f5;
+            text-align: center;
+        }
+
+        .project-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .project-item {
+            background-color: #f1f3f5;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        footer {
+            background-color: #343a40;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+        }
+    </style>
+</body>
+
+</html>

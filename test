@@ -1,0 +1,52 @@
+# Route for Admin
+@app.route('/signupadmin', methods=['GET', 'POST'])
+def signup_admin():
+    if request.method == 'POST':
+        name = request.form['AdminID']
+        email = request.form['Name']
+        password = request.form['Email']
+        hashed_password = generate_password_hash(password)
+        
+        try:
+            connection = create_connection()
+            cursor = connection.cursor()
+            cursor.execute(
+                "INSERT INTO admins (Name, Email, password, phone_number) VALUES (%s, %s, %s)",
+                (name, email, hashed_password)
+            )
+            connection.commit()
+            cursor.close()
+            connection.close()
+            flash('Admin signed up successfully!', 'success')
+            return redirect(url_for('admin'))
+
+        except Error as e:
+            flash(f"Error: {str(e)}", 'danger')
+            return redirect(url_for('signupadmin'))
+
+    return render_template('signupadmin.html')
+
+
+
+# Route for Login
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    email = data.get('Email')
+    password = data.get('password')
+
+    try:
+        connection = create_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        # Query for landscaper or customer based on user_type
+        if user_type == 'admin':
+            cursor.execute("SELECT * FROM admin WHERE email = %s", (email,))
+        elif user_type == 'customer':
+            cursor.execute("SELECT * FROM customers WHERE email = %s", (email,))
+        else:
+            return jsonify({'success': False, 'message': 'Invalid user type'}), 400
+
+        user = cursor.fetchone()
+        cursor.close()
+        connection.close()

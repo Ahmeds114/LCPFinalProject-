@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landscaping Connection Platform</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Landscaping Logo">
+            <span class="logo-text">
+                <span class="text-animated">Landscaping CO</span>
+                <span class="slogan">Crafting Nature’s Beauty</span>
+            </span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('index') }}" {% if request.endpoint=='index' %}class="active" {% endif
+                        %}>Home</a></li>
+                <li><a href="{{ url_for('about') }}" {% if request.endpoint=='about' %}class="active" {% endif %}>About
+                        Us</a></li>
+                <li><a href="{{ url_for('contact') }}" {% if request.endpoint=='contact' %}class="active" {% endif
+                        %}>Contact Us</a></li>
+                <li><a href="{{ url_for('services') }}" {% if request.endpoint=='services' %}class="active" {% endif
+                        %}>Services</a></li>
+
+                {% if 'user' in session %}
+                <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                {% else %}
+                <li><a href="#" id="loginSignupButton">Login/Signup</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        <div class="get-quote">
+            <a href="#" class="quote-button">Get A Quote</a>
+        </div>
+    </header>
+
+    <main>
+        <section class="home-section">
+            <h2 class="center-text">Connect with the Best Landscapers</h2>
+            <p class="sub-text">Our platform helps you find the perfect landscaper for your needs.</p>
+        </section>
+
+        <div class="image-grid">
+            <div class="image-container">
+                <img src="{{ url_for('static', filename='images/care.jpg') }}" alt="Landscaping Care">
+            </div>
+            <div class="image-container">
+                <img src="{{ url_for('static', filename='images/garden.jpg') }}" alt="Beautiful Garden">
+            </div>
+            <div class="image-container">
+                <img src="{{ url_for('static', filename='images/home1.jpg') }}" alt="Landscaped Home">
+            </div>
+        </div>
+
+        <div class="image-grid">
+            <div class="image-container">
+                <img src="{{ url_for('static', filename='images/lawn.jpg') }}" alt="Lawn Maintenance">
+            </div>
+            <div class="image-container">
+                <img src="{{ url_for('static', filename='images/home2.jpg') }}" alt="Modern Lawn">
+            </div>
+            <div class="image-container">
+                <img src="{{ url_for('static', filename='images/path.jpg') }}" alt="Garden Pathway">
+            </div>
+        </div>
+    </main>
+
+    <!-- Login/Signup Popup -->
+    <div id="loginPopup" class="popup">
+        <div class="popup-content">
+            <!-- Close Button -->
+            <span class="close" onclick="closePopup()">&times;</span>
+
+            <!-- Logo -->
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo">
+
+            <!-- User Type Dropdown -->
+            <label for="user_type">User Type:</label>
+            <select id="user_type" name="user_type" required>
+                <option value="customer">Customer</option>
+                <option value="landscaper">Landscaper</option>
+            </select><br>
+
+            <!-- Username and Password Inputs -->
+            <input type="text" placeholder="Username" id="username">
+            <input type="password" placeholder="Password" id="password">
+
+            <!-- Login Button -->
+            <button onclick="login()">Login</button>
+
+            <!-- Signup Buttons -->
+            <button onclick="navigateTo('{{ url_for('signup_customer') }}')">Signup as Customer</button>
+            <button onclick="navigateTo('{{ url_for('signup_landscaper') }}')">Signup as Landscaper</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Landscaping Connection Platform. All rights reserved.</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script>
+        // Open login/signup popup
+        document.getElementById('loginSignupButton').onclick = function () {
+            document.getElementById('loginPopup').style.display = 'block';
+        }
+
+        // Close popup
+        function closePopup() {
+            document.getElementById('loginPopup').style.display = 'none';
+        }
+
+        // Navigate to signup page
+        function navigateTo(url) {
+            window.location.href = url;
+        }
+
+        // Login function
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const userType = document.getElementById('user_type').value;
+
+            if (!username || !password) {
+                alert('Please enter both username and password.');
+                return;
+            }
+
+            fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password,
+                    user_type: userType
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = "/dashboard";
+                    } else {
+                        alert('Invalid login credentials.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error processing login. Please try again.');
+                });
+        }
+    </script>
+</body>
+
+</html>

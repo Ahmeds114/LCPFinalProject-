@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Landscaping Connection Platform</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        /* Add styling for About Us section */
+        .about-us {
+            background-color: #f0f9f0;
+            /* Light green background */
+            padding: 40px;
+            text-align: center;
+        }
+
+        .about-us h2 {
+            font-size: 36px;
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+
+        .about-us p {
+            font-size: 18px;
+            color: #333;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto 20px auto;
+        }
+
+        /* Utilize page width for better readability */
+        .about-us .content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Landscaping Logo">
+            <span class="logo-text">
+                <span class="text-animated">Landscaping CO</span>
+                <span class="slogan">Crafting Nature’s Beauty</span>
+            </span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('about') }}" class="active">About Us</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+                <li><a href="{{ url_for('services') }}">Services</a></li>
+                <!-- {% if 'user' in session %}
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                {% else %}
+                <li><a href="{{ url_for('login') }}">Login/Signup</a></li>
+                {% endif %} -->
+            </ul>
+        </nav>
+        <div class="get-quote">
+            <a href="#" class="quote-button">Get A Quote</a>
+        </div>
+    </header>
+
+    <main>
+        <section class="about-us">
+            <div class="content">
+                <h2>About Us</h2>
+                <p>Welcome to Landscaping Connection Platform - your trusted place to connect with professional
+                    landscapers and enhance the beauty of your outdoor spaces.</p>
+                <p>Our platform simplifies the process of finding and hiring landscapers. Whether you're looking for
+                    regular lawn care or a complete garden overhaul, we connect you with skilled professionals who can
+                    bring your vision to life.</p>
+                <p>Landscaping Connection Platform is built to serve both customers and landscapers by creating a space
+                    where businesses can grow and customers can enjoy tailored landscaping services that suit their
+                    needs.</p>
+                <p>We believe in creating and maintaining outdoor spaces that not only improve the environment but also
+                    enhance your quality of life. Let us help you craft nature’s beauty!</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Landscaping Connection Platform. All rights reserved.</p>
+    </footer>
+</body>
+
+</html>

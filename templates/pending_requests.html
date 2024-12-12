@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pending Requests - Landscaping Co</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        /* General styling */
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #333;
+            padding: 20px;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .sidebar-header .logo {
+            width: 100%;
+            margin-bottom: 40px;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar-nav li {
+            margin: 20px 0;
+        }
+
+        .sidebar-nav a {
+            text-decoration: none;
+            color: white;
+            font-size: 18px;
+            display: block;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background-color: #0056b3;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 40px;
+            background-color: #fff;
+            width: calc(100% - 260px);
+        }
+
+        h1 {
+            color: #0056b3;
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .requests-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .request-card {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            width: 700px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .request-details {
+            flex: 1;
+            margin-right: 20px;
+        }
+
+        .request-details p {
+            margin: 5px 0;
+            font-size: 16px;
+        }
+
+        .request-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            border-radius: 5px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-accept {
+            background-color: #28a745;
+        }
+
+        .btn-accept:hover {
+            background-color: #218838;
+        }
+
+        .btn-reject {
+            background-color: #dc3545;
+        }
+
+        .btn-reject:hover {
+            background-color: #c82333;
+        }
+
+        .no-requests {
+            text-align: center;
+            font-size: 18px;
+            color: #777;
+        }
+
+        footer {
+            background-color: #343a40;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar navigation -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo">
+        </div>
+        <ul class="sidebar-nav">
+            <li>
+                <a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">Home</a>
+            </li>
+            <li>
+                <a href="{{ url_for('dashboard') }}"
+                    class="{% if request.endpoint == 'dashboard' %}active{% endif %}">Dashboard</a>
+            </li>
+            <li>
+                <a href="{{ url_for('pending_requests') }}" class="active">Pending Requests</a>
+            </li>
+            <li>
+                <a href="{{ url_for('search_projects') }}"
+                    class="{% if request.endpoint == 'search_projects' %}active{% endif %}">Search Projects</a>
+            </li>
+            <li>
+                <a href="{{ url_for('invoices') }}"
+                    class="{% if request.endpoint == 'invoices' %}active{% endif %}">Invoices</a>
+            </li>
+            <li>
+                <a href="{{ url_for('messages') }}"
+                    class="{% if request.endpoint == 'messages' %}active{% endif %}">Messages</a>
+            </li>
+            <li>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main content -->
+    <div class="main-content">
+        <h1>Pending Requests</h1>
+        <div class="requests-container">
+            {% if requests %}
+            {% for request in requests %}
+            <div class="request-card">
+                <div class="request-details">
+                    <p><strong>Customer:</strong> {{ request.customer_name }}</p>
+                    <p><strong>Email:</strong> {{ request.email }}</p>
+                    <p><strong>Date:</strong> {{ request.request_date }}</p>
+                </div>
+                <div class="request-actions">
+                    <form action="{{ url_for('update_request_status') }}" method="POST">
+                        <input type="hidden" name="request_id" value="{{ request.request_id }}">
+                        <input type="hidden" name="action" value="accept">
+                        <button type="submit" class="btn btn-accept">Accept</button>
+                    </form>
+                    <form action="{{ url_for('update_request_status') }}" method="POST">
+                        <input type="hidden" name="request_id" value="{{ request.request_id }}">
+                        <input type="hidden" name="action" value="reject">
+                        <button type="submit" class="btn btn-reject">Reject</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p class="no-requests">No pending requests at the moment.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Landscaping Connection Platform. All rights reserved.</p>
+    </footer>
+</body>
+
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Projects - Landscaping Co</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+
+<body>
+    <!-- Sidebar navigation -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Landscaping Logo" class="logo"
+                style="width: 100%;">
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">Home</a>
+            </li>
+            <li><a href="{{ url_for('dashboard') }}"
+                    class="{% if request.endpoint == 'dashboard' %}active{% endif %}">Dashboard</a></li>
+            <li><a href="{{ url_for('pending_requests') }}"
+                    class="{% if request.endpoint == 'pending_requests' %}active{% endif %}">Pending Requests</a></li>
+            <li><a href="{{ url_for('search_projects') }}" class="active">Search Projects</a></li>
+            <li><a href="{{ url_for('invoices') }}">Invoices</a></li>
+            <li><a href="{{ url_for('messages') }}">Messages</a></li>
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main content -->
+    <div class="main-content">
+        <h1>Search Projects</h1>
+
+        <!-- Form for searching projects by zip code -->
+        <form action="{{ url_for('search_projects') }}" method="POST" class="search-form">
+            <label for="zipcode">Enter Zip Code:</label>
+            <input type="text" id="zipcode" name="zipcode" required>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+
+        <!-- Projects List -->
+        {% if projects and zipcode %}
+        <h2>Projects in Zip Code {{ zipcode }}</h2>
+        <ul class="projects-list">
+            {% for project in projects %}
+            <li class="project-item">
+                <h3>Project ID: {{ project['ProjectID'] }}</h3>
+                <p><strong>Customer ID:</strong> {{ project['CustomerID'] }}</p>
+                <p><strong>Start Date:</strong> {{ project['StartDate'] }}</p>
+                <p><strong>End Date:</strong> {{ project['EndDate'] }}</p>
+                <p><strong>Status:</strong> {{ project['Status'] }}</p>
+
+                <!-- Bid Form -->
+                <form action="{{ url_for('place_bid', project_id=project['ProjectID']) }}" method="POST"
+                    class="bid-form">
+                    <label for="bid_amount_{{ project['ProjectID'] }}">Bid Amount:</label>
+                    <input type="number" id="bid_amount_{{ project['ProjectID'] }}" name="bid_amount" required>
+                    <button type="submit" class="btn btn-secondary">Place Bid</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+        {% elif zipcode %}
+        <p>No projects found for the entered zip code: {{ zipcode }}.</p>
+        {% else %}
+        <p>Enter a zip code to search for projects.</p>
+        {% endif %}
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Landscaping Connection Platform. All rights reserved.</p>
+    </footer>
+
+    <style>
+        /* General styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #333;
+            padding: 20px;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .sidebar-header .logo {
+            width: 100%;
+            margin-bottom: 40px;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar-nav li {
+            margin: 20px 0;
+        }
+
+        .sidebar-nav a {
+            text-decoration: none;
+            color: white;
+            font-size: 18px;
+            display: block;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background-color: #0056b3;
+        }
+
+        .main-content {
+            margin-left: 300px;
+            padding: 40px;
+            background-color: #fff;
+            width: calc(100% - 250px);
+        }
+
+        .projects-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .project-item {
+            background-color: #f1f3f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .project-item h3 {
+            margin: 0 0 10px 0;
+        }
+
+        .bid-form {
+            margin-top: 10px;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            background-color: #c82333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+
+        .btn:hover {
+            background-color: #c82333;
+        }
+
+        footer {
+            background-color: #343a40;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+        }
+    </style>
+</body>
+
+</html>

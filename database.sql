@@ -173,16 +173,16 @@ CREATE TABLE IF NOT EXISTS chat (
 
 -- Insert sample data into customers table
 INSERT INTO customers (full_name, email, phone_number, password, address, zipcode) VALUES
-('Ahmed', 'ahmedashfaq1011@gmail.com', '+91 74166 67393', 'password123', '123 Main St', '11203'),
-('Test User1', 'user1@gmail.com', '+1 (123) 456-7890', 'password123', '456 Second St', '11580'),
-('Test User2', 'user2@gmail.com', '+1 (198) 765-4320', 'password123', '789 Third St', '11590');
+('Ahmed', 'ahmed12@gmail.com', '+914565676739', 'password123', '123 Main St', '11203'),
+('Test User1', 'user1@gmail.com', '+1(123)456-9090', 'password123', '456 Second St', '11580'),
+('Test User2', 'user2@gmail.com', '+1(198)567-8900', 'password123', '789 Third St', '11590');
 
 -- Insert sample data into landscapers table
 INSERT INTO landscaperstable (business_name, email, phone_number, password, services_offered, address, zipcode) VALUES
-('Green Lawn Services', 'shujathkhan549@gmail.com', '+91 83283 83717', 'password123', 'Lawn Mowing, Garden Cleanup','124 Shatter St', '11203'),
-('Rahman Landscaping', 'abdulrahman89696@gmail.com', '1 (917) 792-9968', 'password123', 'Landscape Design', '457 Hyde way St', '11580'),
-('Khubaib’s Garden Services', 'khubaibsks@gmail.com', '1 (929) 584-1393', 'password123', 'Garden Cleanup, Lawn Mowing', '792 Eve Pl', '11590'),
-('Ahmed’s Landscaping', 'ahmedashfaq1011@gmail.com', '1 (123) 456-0011', 'password123', 'Lawn Mowing, Landscape Design', '10 New Ave', '11590');
+('Green Lawn Services', 'shujath@gmail.com', '+911234567890', 'password123', 'Lawn Mowing, Garden Cleanup','124 Shatter St', '11203'),
+('Rahman Landscaping', 'abdulgmail.com', '1(123)4567890', 'password123', 'Landscape Design', '457 Hyde way St', '11580'),
+('Khubaib’s Garden Services', 'khubaib@gmail.com', '1(234)5678910', 'password123', 'Garden Cleanup, Lawn Mowing', '792 Eve Pl', '11590'),
+('Ahmed’s Landscaping', 'ahmed1@gmail.com', '1(123)4560011', 'password123', 'Lawn Mowing, Landscape Design', '10 New Ave', '11590');
 
 -- Insert sample data into Services table with link to landscapers
 INSERT INTO services (Name, Description, Price, LandscaperID) VALUES
